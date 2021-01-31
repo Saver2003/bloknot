@@ -13,7 +13,6 @@ const UserSchema = new Schema({
       validator: async function (value) {
         if (!this.isModified('username')) return true;
         const user = await User.findOne({username: value});
-        console.log(user);
         if (user) throw new Error('Пользователь с таким именем уже существует');
         return true;
       },
@@ -32,7 +31,7 @@ const UserSchema = new Schema({
   },
   token: String
 });
-//
+
 UserSchema.pre('save', async function (next){
   if (!this.isModified('password')) return next();
 
@@ -40,8 +39,7 @@ UserSchema.pre('save', async function (next){
   const hash = await bcrypt.hash(this.password, salt);
 
   this.password = hash;
-
-
+  
   next();
 });
 
